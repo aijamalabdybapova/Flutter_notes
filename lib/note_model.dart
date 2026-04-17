@@ -2,36 +2,50 @@ class Note {
   String id;
   String content;
   DateTime createdAt;
-  bool isFavorite;  
+  DateTime updatedAt;
 
   Note({
     required this.id,
     required this.content,
     required this.createdAt,
-    this.isFavorite = false,  
-  });
-  
+    DateTime? updatedAt,
+  }) : updatedAt = updatedAt ?? createdAt;
+
   Note copyWith({
     String? id,
     String? content,
     DateTime? createdAt,
-    bool? isFavorite,  
+    DateTime? updatedAt,
   }) {
     return Note(
       id: id ?? this.id,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
-      isFavorite: isFavorite ?? this.isFavorite,  
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
   
-  
-  Note toggleFavorite() {
+  Note updateContent(String newContent) {
     return Note(
       id: id,
-      content: content,
+      content: newContent,
       createdAt: createdAt,
-      isFavorite: !isFavorite,
+      updatedAt: DateTime.now(),
     );
+  }
+  
+  String get formattedDate {
+    final now = DateTime.now();
+    final diff = now.difference(updatedAt);
+    
+    if (diff.inDays == 0) {
+      return 'Сегодня в ${updatedAt.hour}:${updatedAt.minute.toString().padLeft(2, '0')}';
+    } else if (diff.inDays == 1) {
+      return 'Вчера';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays} дня(ей) назад';
+    } else {
+      return '${updatedAt.day}.${updatedAt.month}.${updatedAt.year}';
+    }
   }
 }
